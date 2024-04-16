@@ -1,4 +1,7 @@
 package com.demo.Controlador;
+import com.demo.DTO.TrainerDTO;
+import com.demo.Modelo.Trainer;
+import com.demo.Service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,12 +16,12 @@ public class TrainerController {
     }
 
     @PostMapping("/add")
-    public TrainerResponseDTO addTrainer(@RequestBody Trainer trainer) {
+    public TrainerDTO addTrainer(@RequestBody Trainer trainer) {
         return trainerService.addTrainer(trainer);
     }
 
     @GetMapping("/info")
-    public TrainerResponseDTO showTrainerInfo(@RequestParam String email, @RequestParam String password) {
+    public TrainerDTO showTrainerInfo(@RequestParam String email, @RequestParam String password) {
         return trainerService.showTrainerInfo(email, password);
     }
 
