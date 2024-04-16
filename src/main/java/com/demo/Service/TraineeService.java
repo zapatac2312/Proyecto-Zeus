@@ -1,5 +1,6 @@
 package com.demo.Service;
 
+import com.demo.DTO.TraaineeMapper;
 import com.demo.DTO.TraineeDTO;
 import com.demo.Modelo.ActivityReports;
 import com.demo.Modelo.Trainee;
@@ -23,7 +24,10 @@ public class TraineeService {
 
 
     public TraineeDTO addTrainee(Trainee trainee){
-        return null;
+
+        TraineeDTO traineeDTO = TraaineeMapper.mapper.traineeToTraineeDTO(trainee);
+        this.traineeRepository.save(trainee);
+        return traineeDTO;
     }
 
     public Boolean updateTraineeInfo(String email, String password){
