@@ -9,9 +9,9 @@ import org.mapstruct.factory.Mappers;
 @Mapper
 public interface TrainerMapper {
 
-    TrainerMapper mapper = Mappers.getMapper(TrainerMapper.class);
+   TrainerMapper mapper = Mappers.getMapper(TrainerMapper.class);
 
-    Trainee trainerDTOtoTrainer(TrainerDTO trainerDTO);
+   Trainee trainerDTOtoTrainer(TrainerDTO trainerDTO);
 
     TrainerDTO trainerToTrainerDTO(Trainer trainer);
 

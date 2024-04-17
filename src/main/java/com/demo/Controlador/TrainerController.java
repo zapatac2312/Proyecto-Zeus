@@ -1,5 +1,7 @@
 package com.demo.Controlador;
+import com.demo.DTO.TraineeDTO;
 import com.demo.DTO.TrainerDTO;
+import com.demo.Modelo.Trainee;
 import com.demo.Modelo.Trainer;
 import com.demo.Service.TrainerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,4 +31,11 @@ public class TrainerController {
     public boolean changeTrainerPassword(@RequestParam String email, @RequestParam String oldPassword) {
         return trainerService.changeTrainerPassword(email, oldPassword);
     }
+
+    /*@PutMapping("/update-info")
+    public TrainerDTO updateTrainerInfo(@RequestParam String email, @RequestParam String password, @RequestBody Trainee trainee) {
+
+        return trainerService.updateTrainerInfo(email, password,trainee);
+
+    }*/
 }
