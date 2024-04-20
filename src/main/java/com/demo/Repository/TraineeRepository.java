@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
 
-    Trainee findByEmailAndPassword(String email, String password);
+    Trainee findByEmail(String email);
 
 
     //ActivityReports saveActivityReport(ActivityReports activityReport);

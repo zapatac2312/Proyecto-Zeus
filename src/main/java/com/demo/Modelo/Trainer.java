@@ -6,9 +6,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.TypeAlias;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@Entity
+@Entity 
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "trainer")
@@ -34,6 +35,15 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private List<Trainee> trainee;
+
+    public List<Trainee> getTrainee() {
+        return trainee;
+    }
+
+    public void setTrainee(List<Trainee> trainee) {
+        this.trainee = trainee;
+    }
+
     public Long getID() {
         return ID;
     }
@@ -89,4 +99,16 @@ public class Trainer {
     public void setCertifications(String certifications) {
         this.certifications = certifications;
     }
+
+    public void addTrainee(Trainee trainee) {
+        if (this.trainee == null) {
+            this.trainee = new ArrayList<>();
+        }
+        this.trainee.add(trainee);
+    }
+
+    public Integer getTrainerAvailability(){
+        return this.trainee.size();
+    }
+
 }

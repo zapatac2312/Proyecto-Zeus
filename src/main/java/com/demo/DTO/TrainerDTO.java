@@ -1,8 +1,11 @@
 package com.demo.DTO;
 
 
+import com.demo.Modelo.Trainee;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +16,15 @@ public class TrainerDTO {
     private String speciality;
     private String experience;
     private String certifications;
+    private List<Trainee> trainee;
+
+    public List<Trainee> getTrainee() {
+        return trainee;
+    }
+
+    public void setTrainee(List<Trainee> trainee) {
+        this.trainee = trainee;
+    }
 
     public String getName() {
         return name;

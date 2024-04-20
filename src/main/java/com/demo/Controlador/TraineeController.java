@@ -24,8 +24,8 @@ public class TraineeController {
     }
 
     @GetMapping("/info")
-    public TraineeDTO showTraineeInfo(@RequestParam String email, @RequestParam String password) {
-        return traineeService.showTraineeInfo(email, password);
+    public TraineeDTO showTraineeInfo(@RequestParam String email) {
+        return traineeService.showTraineeInfo(email);
     }
 
     @PutMapping("/change-password")
@@ -34,9 +34,13 @@ public class TraineeController {
     }
 
     @PutMapping("/update-info")
-    public TraineeDTO updateTraineeInfo(@RequestParam String email, @RequestParam String password, @RequestBody Trainee trainee) {
-
-        return traineeService.updateTraineeInfo(email, password,trainee);
-
+    public TraineeDTO updateTraineeInfo(@RequestParam String email, @RequestBody Trainee trainee) {
+        return traineeService.updateTraineeInfo(email, trainee);
     }
+
+    @PutMapping("/assing-trainer")
+    public TrainerDTO assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail){
+        return this.traineeService.assingToTrainer(name, traineeEmail);
+    }
+
 }
