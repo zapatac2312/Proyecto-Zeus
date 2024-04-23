@@ -1,5 +1,6 @@
 package com.demo.Controlador;
 
+import com.demo.DTO.RequestTraineeDTO;
 import com.demo.DTO.TraineeDTO;
 import com.demo.DTO.TrainerDTO;
 import com.demo.Modelo.Trainee;
@@ -29,8 +30,8 @@ public class TraineeController {
     }
 
     @PutMapping("/change-password")
-    public boolean changeTraineePassword(@RequestParam String email, @RequestParam String oldPassword) {
-        return traineeService.changeTraineePassword(email, oldPassword);
+    public boolean changeTraineePassword(@RequestBody RequestTraineeDTO requestTraineeDTO) {
+        return traineeService.changeTraineePassword(requestTraineeDTO);
     }
 
     @PutMapping("/update-info")
