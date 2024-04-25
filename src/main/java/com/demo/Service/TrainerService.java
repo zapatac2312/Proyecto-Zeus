@@ -31,62 +31,43 @@ public class TrainerService {
         } else if(trainer.getPassword()==null){
             throw new RuntimeException("Invalid password");
         }
-        List<String> emailsDataBase = new ArrayList<>();
-        this.trainerRepository.findAll()
-                .forEach(trainer1 -> emailsDataBase.add(trainer1.getEmail()));
-
-        if(emailsDataBase.contains(trainer.getEmail())){
-            throw new RuntimeException("Trainees email: "+ trainer.getEmail()+" already registered");
+        if(trainerRepository.existsByEmail(trainer.getEmail())){
+            this.trainerRepository.save(trainer);
+            return trainerDTO;
+        }else {
+            throw new RuntimeException("Trainer's email: "+ trainer.getEmail()+" already registered");
         }
-        this.trainerRepository.save(trainer);
-        return trainerDTO;
     }
     public TrainerDTO updateTrainerInfo(String email,Trainer updatedTrainerInfo) {
-
-        List<String> emailsDataBase = new ArrayList<>();
-        this.trainerRepository.findAll().forEach(trainer1 -> emailsDataBase.add(trainer1.getEmail()));
-        if(!emailsDataBase.contains(email)){
-            throw new RuntimeException("The trainees information you want to update doesn't exist in our system");
-        }
-        Trainer trainer = trainerRepository.findByEmail(email);
-        if(updatedTrainerInfo.getName()==null){
-            throw new RuntimeException("A name is required");
-        } else if(updatedTrainerInfo.getEmail()==null){
-            throw new RuntimeException("Invalid email");
-        } else if(updatedTrainerInfo.getPassword()==null){
-            throw new RuntimeException("Invalid password");
-        }
-        for(String emailBD: emailsDataBase){
-            if (Objects.equals(email, emailBD)){
-                trainer.setName(updatedTrainerInfo.getName());
-                trainer.setEmail(updatedTrainerInfo.getEmail());
-                trainer.setSpeciality(updatedTrainerInfo.getSpeciality());
-                trainer.setExperience(updatedTrainerInfo.getExperience());
-                trainer.setCertifications(updatedTrainerInfo.getCertifications());
-
-                this.trainerRepository.save(trainer);
-                return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
+        if(trainerRepository.existsByEmail(email)){
+            Trainer trainer = trainerRepository.findByEmail(email);
+            if(updatedTrainerInfo.getName()==null){
+                throw new RuntimeException("A name is required");
+            } else if(updatedTrainerInfo.getEmail()==null){
+                throw new RuntimeException("Invalid email");
+            } else if(updatedTrainerInfo.getPassword()==null){
+                throw new RuntimeException("Invalid password");
             }
+            trainer.setName(updatedTrainerInfo.getName());
+            trainer.setEmail(updatedTrainerInfo.getEmail());
+            trainer.setSpeciality(updatedTrainerInfo.getSpeciality());
+            trainer.setExperience(updatedTrainerInfo.getExperience());
+            trainer.setCertifications(updatedTrainerInfo.getCertifications());
+            this.trainerRepository.save(trainer);
+            return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
+        }else {
+            throw new RuntimeException("The trainer's information you want to update doesn't exist in our system");
         }
-        throw new RuntimeException("User not found");
     }
-
-
     public TrainerDTO showTrainerInfo(String email){
-
-        List<String> emailsDataBase = new ArrayList<>();
-        this.trainerRepository.findAll().forEach(trainer1 -> emailsDataBase.add(trainer1.getEmail()));
-        if(!emailsDataBase.contains(email)){
+        if(trainerRepository.existsByEmail(email)){
+            Trainer trainer = trainerRepository.findByEmail(email);
+            return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
+        }else {
             throw new RuntimeException("Trainer's email not found");
         }
-        Trainer trainer = trainerRepository.findByEmail(email);
-        for(String emailBD: emailsDataBase){
-            if (Objects.equals(email, emailBD)){
-                return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
-            }
-        }
-        throw new RuntimeException("Trainer not found");
     }
+
     public List<TrainerDTO> checkTrainerAvailability(){
         List<Trainer> traineerList = trainerRepository.findAll();
         return traineerList.stream()
@@ -96,16 +77,15 @@ public class TrainerService {
     }
 
     public Boolean changeTrainerPassword(RequestTrainerDTO requestTrainerDTO){
-        List<String> emailsDataBase = new ArrayList<>();
-        this.trainerRepository.findAll().forEach(trainee1 -> emailsDataBase.add(trainee1.getEmail()));
-        if(!emailsDataBase.contains(requestTrainerDTO.getEmail())){
+        if(trainerRepository.existsByEmail((requestTrainerDTO.getEmail()))){
+            Trainer trainer = this.trainerRepository.findByEmail(requestTrainerDTO.getEmail());
+            if(requestTrainerDTO.getPassword()==null|| requestTrainerDTO.getPassword().equals(requestTrainerDTO.getOldPassword())){
+                throw new RuntimeException("New password is empty or same as the old password");
+            }
+            trainer.setPassword(requestTrainerDTO.getPassword());
+            return true;
+        }else {
             throw new RuntimeException("Trainer's email not found");
         }
-        Trainer trainer = this.trainerRepository.findByEmail(requestTrainerDTO.getEmail());
-        if(requestTrainerDTO.getPassword()==null|| requestTrainerDTO.getPassword().equals(requestTrainerDTO.getOldPassword())){
-            throw new RuntimeException("New password is empty or same as the old password");
-        }
-        trainer.setPassword(requestTrainerDTO.getPassword());
-        return true;
     }
 }

@@ -11,8 +11,7 @@ import org.springframework.data.annotation.TypeAlias;
 import java.util.ArrayList;
 import java.util.List;
 
-@Setter
-@Getter
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -51,4 +50,67 @@ public class Trainer {
         return this.trainee.size();
     }
 
+    public Long getID() {
+        return ID;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getSpeciality() {
+        return speciality;
+    }
+
+    public void setSpeciality(String speciality) {
+        this.speciality = speciality;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
+    }
+
+    public String getCertifications() {
+        return certifications;
+    }
+
+    public void setCertifications(String certifications) {
+        this.certifications = certifications;
+    }
+
+    public List<Trainee> getTrainee() {
+        return trainee;
+    }
+
+    public void setTrainee(List<Trainee> trainee) {
+        this.trainee = trainee;
+    }
 }

@@ -44,4 +44,9 @@ public class TraineeController {
         return this.traineeService.assingToTrainer(name, traineeEmail);
     }
 
+    @PostMapping("/generate-report")
+    private Boolean generateReport(@RequestParam String email, @RequestParam String trainingCategory, @RequestParam Integer duration){
+        return this.traineeService.generateReport(email, trainingCategory, duration);
+    }
+
 }

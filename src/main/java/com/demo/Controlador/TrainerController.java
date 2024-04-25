@@ -41,12 +41,9 @@ public class TrainerController {
         return trainerService.checkTrainerAvailability();
     }
 
-    //asignar aprendiz
 
-    /*@PutMapping("/update-info")
-    public TrainerDTO updateTrainerInfo(@RequestParam String email, @RequestParam String password, @RequestBody Trainee trainee) {
-
-        return trainerService.updateTrainerInfo(email, password,trainee);
-
-    }*/
+    @PutMapping("/update-info")
+    public TrainerDTO updateTrainerInfo(@RequestParam String email, @RequestBody Trainer trainer) {
+        return trainerService.updateTrainerInfo(email, trainer);
+    }
 }
