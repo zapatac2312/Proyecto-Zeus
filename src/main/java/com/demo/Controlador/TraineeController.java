@@ -1,6 +1,8 @@
 package com.demo.Controlador;
 
+import com.demo.ApiExceptions.InvalidTrainee;
 import com.demo.DTO.RequestTraineeDTO;
+import com.demo.DTO.ResponseDTO;
 import com.demo.DTO.TraineeDTO;
 import com.demo.DTO.TrainerDTO;
 import com.demo.Modelo.Trainee;
@@ -20,28 +22,61 @@ public class TraineeController {
     }
 
     @PostMapping("/add")
-    public TraineeDTO addTrainee(@RequestBody Trainee trainee){
-        return this.traineeService.addTrainee(trainee);
+    public ResponseDTO<TraineeDTO>addTrainee(@RequestBody Trainee trainee){
+
+        try {
+            return new ResponseDTO(this.traineeService.addTrainee(trainee));
+        } catch (InvalidTrainee e) {
+            return new ResponseDTO(e.getMessage());
+        }
+
     }
 
     @GetMapping("/info")
-    public TraineeDTO showTraineeInfo(@RequestParam String email) {
-        return traineeService.showTraineeInfo(email);
+    public ResponseDTO<TraineeDTO> showTraineeInfo(@RequestParam String email) {
+        try {
+            return new ResponseDTO(this.traineeService.showTraineeInfo(email));
+        } catch (InvalidTrainee e) {
+            return new ResponseDTO(e.getMessage());
+        }
+
+
     }
 
-    @PutMapping("/change-password")
-    public boolean changeTraineePassword(@RequestBody RequestTraineeDTO requestTraineeDTO) {
-        return traineeService.changeTraineePassword(requestTraineeDTO);
+    @PutMapping("/password")
+    public ResponseDTO<Boolean> changeTraineePassword(@RequestBody RequestTraineeDTO requestTraineeDTO) {
+        try {
+            return new ResponseDTO(this.traineeService.changeTraineePassword(requestTraineeDTO));
+
+        } catch (InvalidTrainee e) {
+            return new ResponseDTO(e.getMessage());
+        }
     }
 
-    @PutMapping("/update-info")
-    public TraineeDTO updateTraineeInfo(@RequestParam String email, @RequestBody Trainee trainee) {
-        return traineeService.updateTraineeInfo(email, trainee);
+    @PutMapping("/info")
+    public ResponseDTO<TraineeDTO> updateTraineeInfo(@RequestParam String email, @RequestBody Trainee trainee) {
+        try {
+            return new ResponseDTO(this.traineeService.updateTraineeInfo(email, trainee));
+        } catch (InvalidTrainee e) {
+            return new ResponseDTO(e.getMessage());
+        }
+
     }
 
-    @PutMapping("/assing-trainer")
-    public TrainerDTO assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail){
-        return this.traineeService.assingToTrainer(name, traineeEmail);
+    @PutMapping("/trainer")
+    public ResponseDTO<TraineeDTO> assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail){
+       try {
+           return new ResponseDTO(this.traineeService.assingToTrainer(name, traineeEmail));
+
+       } catch (InvalidTrainee e) {
+           return new ResponseDTO(e.getMessage());
+       }
+
+    }
+
+    @PostMapping("/report")
+    private Boolean generateReport(@RequestParam String email, @RequestParam String trainingCategory, @RequestParam Integer duration){
+        return this.traineeService.generateReport(email, trainingCategory, duration);
     }
 
 }

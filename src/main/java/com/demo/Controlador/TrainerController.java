@@ -1,8 +1,7 @@
 package com.demo.Controlador;
-import com.demo.DTO.RequestTraineeDTO;
-import com.demo.DTO.RequestTrainerDTO;
-import com.demo.DTO.TraineeDTO;
-import com.demo.DTO.TrainerDTO;
+import com.demo.ApiExceptions.InvalidTrainee;
+import com.demo.ApiExceptions.InvalidTrainer;
+import com.demo.DTO.*;
 import com.demo.Modelo.Trainee;
 import com.demo.Modelo.Trainer;
 import com.demo.Service.TrainerService;
@@ -22,18 +21,34 @@ public class TrainerController {
     }
 
     @PostMapping("/add")
-    public TrainerDTO addTrainer(@RequestBody Trainer trainer) {
-        return trainerService.addTrainer(trainer);
+    public ResponseDTO<TrainerDTO> addTrainer(@RequestBody Trainer trainer) {
+        try {
+            return new ResponseDTO(this.trainerService.addTrainer(trainer));
+
+        } catch (InvalidTrainer e) {
+            return new ResponseDTO(e.getMessage());
+        }
+
     }
 
     @GetMapping("/info")
-    public TrainerDTO showTrainerInfo(@RequestParam String email) {
-        return trainerService.showTrainerInfo(email);
+    public  ResponseDTO<TrainerDTO> showTrainerInfo(@RequestParam String email) {
+        try {
+            return new ResponseDTO(this.trainerService.showTrainerInfo(email));
+        } catch (InvalidTrainer e) {
+            return new ResponseDTO(e.getMessage());
+        }
+
     }
 
-    @PutMapping("/change-password")
-    public boolean changeTrainerPassword(@RequestBody RequestTrainerDTO requestTrainerDTO) {
-        return trainerService.changeTrainerPassword(requestTrainerDTO);
+    @PutMapping("/password")
+    public ResponseDTO<Boolean> changeTrainerPassword(@RequestBody RequestTrainerDTO requestTrainerDTO) {
+        try {
+            return new ResponseDTO(this.trainerService.changeTrainerPassword(requestTrainerDTO));
+
+        } catch (InvalidTrainer e) {
+            return new ResponseDTO(e.getMessage());
+        }
     }
 
     @GetMapping("/availability")
@@ -41,12 +56,15 @@ public class TrainerController {
         return trainerService.checkTrainerAvailability();
     }
 
-    //asignar aprendiz
 
-    /*@PutMapping("/update-info")
-    public TrainerDTO updateTrainerInfo(@RequestParam String email, @RequestParam String password, @RequestBody Trainee trainee) {
+    @PutMapping("/info")
+    public ResponseDTO<TrainerDTO> updateTrainerInfo(@RequestParam String email, @RequestBody Trainer trainer) {
+        try {
+            return new ResponseDTO(this.trainerService.updateTrainerInfo(email, trainer));
 
-        return trainerService.updateTrainerInfo(email, password,trainee);
+        } catch (InvalidTrainer e) {
+            return new ResponseDTO(e.getMessage());
+        }
 
-    }*/
+    }
 }

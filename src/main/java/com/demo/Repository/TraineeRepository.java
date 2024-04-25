@@ -12,11 +12,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
-
     Trainee findByEmail(String email);
-
-
-    //ActivityReports saveActivityReport(ActivityReports activityReport);
+    Boolean existsByEmail(String email);
 }
 
 
