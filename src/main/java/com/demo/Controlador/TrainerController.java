@@ -15,33 +15,26 @@ import java.util.List;
 @RequestMapping("/trainer")
 public class TrainerController {
     private final TrainerService trainerService;
-
     @Autowired
     public TrainerController(TrainerService trainerService) {
         this.trainerService = trainerService;
     }
-
     @PostMapping("/add")
     public TrainerDTO addTrainer(@RequestBody Trainer trainer) {
         return trainerService.addTrainer(trainer);
     }
-
     @GetMapping("/info")
     public TrainerDTO showTrainerInfo(@RequestParam String email) {
         return trainerService.showTrainerInfo(email);
     }
-
     @PutMapping("/change-password")
     public boolean changeTrainerPassword(@RequestBody RequestTrainerDTO requestTrainerDTO) {
         return trainerService.changeTrainerPassword(requestTrainerDTO);
     }
-
     @GetMapping("/availability")
     public List<TrainerDTO> checkTrainerAvailability() {
         return trainerService.checkTrainerAvailability();
     }
-
-
     @PutMapping("/update-info")
     public TrainerDTO updateTrainerInfo(@RequestParam String email, @RequestBody Trainer trainer) {
         return trainerService.updateTrainerInfo(email, trainer);

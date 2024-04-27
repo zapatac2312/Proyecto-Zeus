@@ -7,6 +7,8 @@ import com.demo.Modelo.Trainer;
 import com.demo.Repository.TraineeRepository;
 import com.demo.Repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -22,15 +24,16 @@ public class TraineeService {
 
     private TraineeRepository traineeRepository;
     private TrainerRepository trainerRepository;
+    private TrainerService trainerService;
     private WebClient webClient;
 
     @Autowired
-    public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository, WebClient webClient) {
+    public TraineeService(TraineeRepository traineeRepository, TrainerRepository trainerRepository,TrainerService trainerService, WebClient webClient) {
         this.traineeRepository = traineeRepository;
         this.trainerRepository = trainerRepository;
+        this.trainerService = trainerService;
         this.webClient= webClient;
     }
-
     public TraineeDTO addTrainee(Trainee trainee){
         if(trainee.getName()==null){
             throw new RuntimeException("A name is required");
@@ -46,7 +49,6 @@ public class TraineeService {
         this.traineeRepository.save(trainee);
         return traineeDTO;
     }
-
     public TraineeDTO updateTraineeInfo(String email,Trainee updatedTraineeInfo ) {
         if(traineeRepository.existsByEmail(email)){
             Trainee existingTrainee = traineeRepository.findByEmail(email);
@@ -63,13 +65,13 @@ public class TraineeService {
             existingTrainee.setGender(updatedTraineeInfo.getGender());
             existingTrainee.setTrainingGoal(updatedTraineeInfo.getTrainingGoal());
             existingTrainee.setFitnessLevel(updatedTraineeInfo.getFitnessLevel());
+            existingTrainee.setTrainer(updatedTraineeInfo.getTrainer());
             this.traineeRepository.save(existingTrainee);
             return TraineeMapper.mapper.traineeToTraineeDTO(updatedTraineeInfo);
         }else {
             throw new RuntimeException("The trainees information you want to update doesn't exist in our system");
         }
     }
-
     public TraineeDTO showTraineeInfo(String email){
         if(traineeRepository.existsByEmail(email)){
             Trainee existingTrainee = traineeRepository.findByEmail(email);
@@ -78,15 +80,19 @@ public class TraineeService {
             throw new RuntimeException("Trainee's email not found");
         }
     }
-
-    public TrainerDTO assingToTrainer(String trainerName, String traineeEmail){
+    public Boolean assingToTrainer(String trainerName, String traineeEmail){
         if(traineeRepository.existsByEmail(traineeEmail)  &&  trainerRepository.existsByName(trainerName)){
             Trainee trainee = this.traineeRepository.findByEmail(traineeEmail);
             Trainer trainer = this.trainerRepository.findByName(trainerName);
-            trainer.addTrainee(trainee);
-            TrainerDTO trainerDTO = TrainerMapper.mapper.trainerToTrainerDTO(trainer);
-            trainerDTO.setTrainee(trainer.getTrainee());
-            return trainerDTO;
+            if(trainee.getTrainer() == null){
+                trainee.setTrainer(trainer);
+                trainer.addTrainee(trainee);
+                this.trainerService.updateTrainerInfo(trainer.getEmail(), trainer);
+                updateTraineeInfo(traineeEmail, trainee);
+                return true;
+            }else {
+                throw new RuntimeException("Trainee already has trainer assigned");
+            }
         } else {
             throw new RuntimeException("Trainee's email or Trainer's name not found");
         }
@@ -110,10 +116,10 @@ public class TraineeService {
             Trainee trainee = traineeRepository.findByEmail(traineeEmail);
             LocalDate localDate = LocalDate.now();
             ActivityReports activityReports = new ActivityReports(trainee.getID(), trainee.getTrainer().getID(), trainee.getName(), trainee.getTrainer().getName()
-                    , localDate, trainingCategory, duration);
+                    , localDate, trainingCategory, duration, traineeEmail);
 
             Mono<Boolean> respuestaMono = webClient.post()
-                    .uri("/api/add-report")
+                    .uri("http://localhost:8081/api/training-reports/save")
                     .bodyValue(activityReports)
                     .retrieve()
                     .bodyToMono(Boolean.class);
@@ -122,8 +128,11 @@ public class TraineeService {
             throw new RuntimeException("Trainee's email not found");
         }
     }
-
-    public ActivityReports getMonthlyReport(String email, String password){
-        return null;
+    public String getMonthlyReport(String email, Integer month, Integer year){
+        return webClient.get()
+                .uri("http://localhost:8081/api/training-reports/monthly-reports?traineeEmail="+email+"&month="+month+"&year="+year)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 }

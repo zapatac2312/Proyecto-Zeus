@@ -31,7 +31,7 @@ public class TrainerService {
         } else if(trainer.getPassword()==null){
             throw new RuntimeException("Invalid password");
         }
-        if(trainerRepository.existsByEmail(trainer.getEmail())){
+        if(!trainerRepository.existsByEmail(trainer.getEmail())){
             this.trainerRepository.save(trainer);
             return trainerDTO;
         }else {
@@ -53,6 +53,7 @@ public class TrainerService {
             trainer.setSpeciality(updatedTrainerInfo.getSpeciality());
             trainer.setExperience(updatedTrainerInfo.getExperience());
             trainer.setCertifications(updatedTrainerInfo.getCertifications());
+            trainer.setTrainee(updatedTrainerInfo.getTrainee());
             this.trainerRepository.save(trainer);
             return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
         }else {

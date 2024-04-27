@@ -11,7 +11,6 @@ import java.util.Date;
 
 
 public class ActivityReports {
-    //preguntar
     private Long traineeId;
     private Long trainerId;
     private String traineeName;
@@ -19,11 +18,12 @@ public class ActivityReports {
     private LocalDate trainingDate;
     private String trainingType;
     private Integer duration;
+    private String traineeEmail;
 
     public ActivityReports() {
     }
 
-    public ActivityReports(Long traineeId, Long trainerId, String traineeName, String trainerName, LocalDate trainingDate, String trainingType, Integer duration) {
+    public ActivityReports(Long traineeId, Long trainerId, String traineeName, String trainerName, LocalDate trainingDate, String trainingType, Integer duration, String traineeEmail) {
         this.traineeId = traineeId;
         this.trainerId = trainerId;
         this.traineeName = traineeName;
@@ -31,6 +31,15 @@ public class ActivityReports {
         this.trainingDate = trainingDate;
         this.trainingType = trainingType;
         this.duration = duration;
+        this.traineeEmail = traineeEmail;
+    }
+
+    public String getTraineeEmail() {
+        return traineeEmail;
+    }
+
+    public void setTraineeEmail(String traineeEmail) {
+        this.traineeEmail = traineeEmail;
     }
 
     public Long getTraineeId() {

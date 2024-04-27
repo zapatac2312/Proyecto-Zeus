@@ -6,6 +6,7 @@ import com.demo.Modelo.Trainer;
 import com.demo.Repository.TraineeRepository;
 import com.demo.Repository.TrainerRepository;
 import com.demo.Service.TraineeService;
+import com.demo.Service.TrainerService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -20,12 +21,13 @@ public class TraineeServiceTest {
     private TraineeService traineeService;
     private TraineeRepository traineeRepository;
     private TrainerRepository trainerRepository;
+    private TrainerService trainerService;
     private WebClient webClient;
     @BeforeEach
     public void construir(){
         traineeRepository = mock(TraineeRepository.class);
         trainerRepository = mock(TrainerRepository.class);
-        traineeService = new TraineeService(traineeRepository, trainerRepository, webClient);
+        traineeService = new TraineeService(traineeRepository, trainerRepository,trainerService, webClient);
     }
 
     //arrange
@@ -73,7 +75,7 @@ public class TraineeServiceTest {
         trainee.setEmail("john.doe@example.com");
         trainee.setPassword("password");
         // Mocking the behavior of existByEmail to return true, indicating the email already exists
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.addTrainee(trainee);
@@ -88,7 +90,7 @@ public class TraineeServiceTest {
         trainee.setEmail("john.doe@example.com");
         trainee.setPassword("password");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(false);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(false);
         when(traineeRepository.save(trainee)).thenReturn(trainee);
         TraineeDTO traineeDTO = TraineeMapper.mapper.traineeToTraineeDTO(trainee);
         // Act and Assert
@@ -101,7 +103,7 @@ public class TraineeServiceTest {
         trainee.setEmail("john.doe@example.com");
         Trainee updatedTraineeInfo = new Trainee();
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(false);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(false);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.updateTraineeInfo(trainee.getEmail(), updatedTraineeInfo);
@@ -117,7 +119,7 @@ public class TraineeServiceTest {
         Trainee updatedTraineeInfo = new Trainee();
         updatedTraineeInfo.setName(null);
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.updateTraineeInfo(trainee.getEmail(), updatedTraineeInfo);
@@ -134,7 +136,7 @@ public class TraineeServiceTest {
         updatedTraineeInfo.setName("null");
         updatedTraineeInfo.setEmail(null);
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.updateTraineeInfo(trainee.getEmail(), updatedTraineeInfo);
@@ -152,7 +154,7 @@ public class TraineeServiceTest {
         updatedTraineeInfo.setEmail("null");
         updatedTraineeInfo.setPassword(null);
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.updateTraineeInfo(trainee.getEmail(), updatedTraineeInfo);
@@ -175,7 +177,7 @@ public class TraineeServiceTest {
         Trainee existingTrainee = new Trainee();
         existingTrainee.setEmail(email);
         // Mocking the behavior of existByEmail to return true, indicating the trainee exists
-        when(traineeRepository.existByEmail(email)).thenReturn(true);
+        when(traineeRepository.existsByEmail(email)).thenReturn(true);
         when(traineeRepository.findByEmail(email)).thenReturn(existingTrainee);
         // Act
         TraineeDTO result = traineeService.updateTraineeInfo(email, updatedTraineeInfo);
@@ -195,7 +197,7 @@ public class TraineeServiceTest {
         Trainee trainee = new Trainee();
         trainee.setEmail("john.doe@example.com");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(false);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(false);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.showTraineeInfo(trainee.getEmail());
@@ -211,7 +213,7 @@ public class TraineeServiceTest {
         trainee.setEmail("john.doe@example.com");
         trainee.setPassword("password");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         when(traineeRepository.findByEmail(trainee.getEmail())).thenReturn(trainee);
         TraineeDTO traineeDTO = TraineeMapper.mapper.traineeToTraineeDTO(trainee);
         // Act and Assert
@@ -226,7 +228,7 @@ public class TraineeServiceTest {
         Trainer trainer = new Trainer();
         trainer.setName("john");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(false);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(false);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.assingToTrainer(trainee.getEmail(), trainer.getName());
@@ -246,8 +248,8 @@ public class TraineeServiceTest {
         trainer.setEmail("john.doe@example.com");
         trainer.setPassword("password");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
-        when(trainerRepository.existByName(trainer.getName())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
+        when(trainerRepository.existsByName(trainer.getName())).thenReturn(true);
         when(traineeRepository.findByEmail(trainee.getEmail())).thenReturn(trainee);
         when(trainerRepository.findByName(trainer.getName())).thenReturn(trainer);
         TrainerDTO trainerDTO = TrainerMapper.mapper.trainerToTrainerDTO(trainer);
@@ -261,7 +263,7 @@ public class TraineeServiceTest {
         RequestTraineeDTO trainee = new RequestTraineeDTO();
         trainee.setEmail("john.doe@example.com");
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(false);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(false);
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
             traineeService.changeTraineePassword(trainee);
@@ -276,7 +278,7 @@ public class TraineeServiceTest {
         trainee.setName("John Doe");
         trainee.setPassword(null);
         // Mocking
-        when(traineeRepository.existByEmail(trainee.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
         when(traineeRepository.findByEmail(anyString())).thenReturn(any());
         // Act and Assert
         RuntimeException exception = assertThrows(RuntimeException.class, () -> {
@@ -296,7 +298,7 @@ public class TraineeServiceTest {
         trainee1.setEmail("john.doe@example.com");
         trainee1.setPassword("password");
         // Mocking
-        when(traineeRepository.existByEmail(requestTraineeDTO.getEmail())).thenReturn(true);
+        when(traineeRepository.existsByEmail(requestTraineeDTO.getEmail())).thenReturn(true);
         when(traineeRepository.findByEmail(requestTraineeDTO.getEmail())).thenReturn(trainee1);
         // Act and Assert
         assertTrue(() -> traineeService.changeTraineePassword(requestTraineeDTO));
