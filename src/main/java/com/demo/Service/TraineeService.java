@@ -129,10 +129,14 @@ public class TraineeService {
         }
     }
     public String getMonthlyReport(String email, Integer month, Integer year){
-        return webClient.get()
-                .uri("http://localhost:8081/api/training-reports/monthly-reports?traineeEmail="+email+"&month="+month+"&year="+year)
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
+        if (traineeRepository.existsByEmail(email)){
+            return webClient.get()
+                    .uri("http://localhost:8081/api/training-reports/monthly-reports?traineeEmail="+email+"&month="+month+"&year="+year)
+                    .retrieve()
+                    .bodyToMono(String.class)
+                    .block();
+        }else {
+            throw new RuntimeException("Trainee's email not found");
+        }
     }
 }

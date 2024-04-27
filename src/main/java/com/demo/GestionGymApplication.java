@@ -12,6 +12,6 @@ public class GestionGymApplication {
     }
     @Bean
     public WebClient webClient() {
-        return WebClient.builder().baseUrl("http://localhost:8080/").build();
+        return WebClient.builder().baseUrl("http://localhost:8080   /").build();
     }
 }

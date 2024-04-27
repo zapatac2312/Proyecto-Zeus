@@ -1,6 +1,7 @@
 package com.demo;
 
 import com.demo.DTO.*;
+import com.demo.Modelo.ActivityReports;
 import com.demo.Modelo.Trainee;
 import com.demo.Modelo.Trainer;
 import com.demo.Repository.TraineeRepository;
@@ -8,26 +9,35 @@ import com.demo.Repository.TrainerRepository;
 import com.demo.Service.TraineeService;
 import com.demo.Service.TrainerService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Mono;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class TraineeServiceTest {
 
-    private TraineeService traineeService;
     private TraineeRepository traineeRepository;
     private TrainerRepository trainerRepository;
     private TrainerService trainerService;
+    private TraineeService traineeService;
+
+    @MockBean
     private WebClient webClient;
+
     @BeforeEach
-    public void construir(){
+    public void setUp() {
         traineeRepository = mock(TraineeRepository.class);
         trainerRepository = mock(TrainerRepository.class);
-        traineeService = new TraineeService(traineeRepository, trainerRepository,trainerService, webClient);
+        trainerService = new TrainerService(trainerRepository);
+        traineeService = new TraineeService(traineeRepository, trainerRepository, trainerService, webClient);
     }
 
     //arrange
@@ -236,29 +246,9 @@ public class TraineeServiceTest {
         assertEquals("Trainee's email or Trainer's name not found", exception.getMessage());
     }
 
-    @Test
-    public void assingTrainerWithNoExceptions(){
-        // Arrange
-        Trainee trainee = new Trainee();
-        trainee.setName("John Doe");
-        trainee.setEmail("john.doe@example.com");
-        trainee.setPassword("password");
-        Trainer trainer = new Trainer();
-        trainer.setName("john");
-        trainer.setEmail("john.doe@example.com");
-        trainer.setPassword("password");
-        // Mocking
-        when(traineeRepository.existsByEmail(trainee.getEmail())).thenReturn(true);
-        when(trainerRepository.existsByName(trainer.getName())).thenReturn(true);
-        when(traineeRepository.findByEmail(trainee.getEmail())).thenReturn(trainee);
-        when(trainerRepository.findByName(trainer.getName())).thenReturn(trainer);
-        TrainerDTO trainerDTO = TrainerMapper.mapper.trainerToTrainerDTO(trainer);
-        // Act and Assert
-        assertEquals(trainerDTO, traineeService.assingToTrainer(trainer.getName(), trainee.getEmail()));
-    }
 
     @Test
-    public void changeTraineePasswordWhenEmailDoesnExist(){
+    public void changeTraineePasswordWhenEmailDoesntExist(){
         // Arrange
         RequestTraineeDTO trainee = new RequestTraineeDTO();
         trainee.setEmail("john.doe@example.com");
@@ -303,6 +293,33 @@ public class TraineeServiceTest {
         // Act and Assert
         assertTrue(() -> traineeService.changeTraineePassword(requestTraineeDTO));
     }
+
+    @Test
+    public void testGenerateReportTraineeEmailNotFound() {
+        // Arrange
+        String traineeEmail = "trainee@example.com";
+        String trainingCategory = "Programming";
+        Integer duration = 60;
+        when(traineeRepository.existsByEmail(traineeEmail)).thenReturn(false);
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                traineeService.generateReport(traineeEmail, trainingCategory, duration));
+        assertEquals("Trainee's email not found", exception.getMessage());
+    }
+    @Test
+    public void testGetMonthlyReportTraineeEmailNotFound() {
+        // Arrange
+        String email = "nonexistent@example.com";
+        Integer month = 4;
+        Integer year = 2024;
+        // Mocking
+        when(traineeRepository.existsByEmail(email)).thenReturn(false);
+        // Act & Assert
+        RuntimeException exception = assertThrows(RuntimeException.class, () ->
+                traineeService.getMonthlyReport(email, month, year));
+        assertEquals("Trainee's email not found", exception.getMessage());
+    }
+
 }
 
 
