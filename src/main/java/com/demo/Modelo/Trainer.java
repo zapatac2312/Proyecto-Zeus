@@ -3,10 +3,14 @@ package com.demo.Modelo;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.annotation.TypeAlias;
 
+import java.util.ArrayList;
 import java.util.List;
+
 
 @Entity
 @NoArgsConstructor
@@ -34,6 +38,18 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private List<Trainee> trainee;
+
+    public void addTrainee(Trainee trainee) {
+        if (this.trainee == null) {
+            this.trainee = new ArrayList<>();
+        }
+        this.trainee.add(trainee);
+    }
+
+    public Integer getTrainerAvailability(){
+        return this.trainee.size();
+    }
+
     public Long getID() {
         return ID;
     }
@@ -88,5 +104,13 @@ public class Trainer {
 
     public void setCertifications(String certifications) {
         this.certifications = certifications;
+    }
+
+    public List<Trainee> getTrainee() {
+        return trainee;
+    }
+
+    public void setTrainee(List<Trainee> trainee) {
+        this.trainee = trainee;
     }
 }

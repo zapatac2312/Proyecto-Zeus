@@ -1,31 +1,45 @@
 package com.demo.Modelo;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
+
 public class ActivityReports {
-
-
-    //preguntar
-    private Long reportId;
     private Long traineeId;
     private Long trainerId;
     private String traineeName;
     private String TrainerName;
-    private Date trainingDate;
+    private LocalDate trainingDate;
     private String trainingType;
     private Integer duration;
+    private String traineeEmail;
 
-    public Long getReportId() {
-        return reportId;
+    public ActivityReports() {
     }
 
-    public void setReportId(Long reportId) {
-        this.reportId = reportId;
+    public ActivityReports(Long traineeId, Long trainerId, String traineeName, String trainerName, LocalDate trainingDate, String trainingType, Integer duration, String traineeEmail) {
+        this.traineeId = traineeId;
+        this.trainerId = trainerId;
+        this.traineeName = traineeName;
+        TrainerName = trainerName;
+        this.trainingDate = trainingDate;
+        this.trainingType = trainingType;
+        this.duration = duration;
+        this.traineeEmail = traineeEmail;
+    }
+
+    public String getTraineeEmail() {
+        return traineeEmail;
+    }
+
+    public void setTraineeEmail(String traineeEmail) {
+        this.traineeEmail = traineeEmail;
     }
 
     public Long getTraineeId() {
@@ -60,11 +74,11 @@ public class ActivityReports {
         TrainerName = trainerName;
     }
 
-    public Date getTrainingDate() {
+    public LocalDate getTrainingDate() {
         return trainingDate;
     }
 
-    public void setTrainingDate(Date trainingDate) {
+    public void setTrainingDate(LocalDate trainingDate) {
         this.trainingDate = trainingDate;
     }
 

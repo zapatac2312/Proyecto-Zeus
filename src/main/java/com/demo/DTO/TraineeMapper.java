@@ -1,17 +1,17 @@
 package com.demo.DTO;
 
 import com.demo.Modelo.Trainee;
+import com.demo.Modelo.Trainer;
+import jakarta.persistence.Entity;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper
-public interface TraaineeMapper {
+public interface TraineeMapper {
 
-    TraaineeMapper mapper = Mappers.getMapper(TraaineeMapper.class);
+    TraineeMapper mapper = Mappers.getMapper(TraineeMapper.class);
 
     Trainee traineeDTOtoTrainee(TraineeDTO traineeDTO);
 
     TraineeDTO traineeToTraineeDTO(Trainee trainee);
-
 }

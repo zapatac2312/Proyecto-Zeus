@@ -2,8 +2,7 @@ package com.demo.Modelo;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @NoArgsConstructor
@@ -30,13 +29,17 @@ public class Trainee {
     @Column(name = "fitnessLevel")
     private String fitnessLevel;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainer_id")
+    @Setter
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "trainer_id", unique = false)
     private Trainer trainer;
-
 
     public Long getID() {
         return ID;
+    }
+
+    public void setID(Long ID) {
+        this.ID = ID;
     }
 
     public String getName() {
@@ -95,4 +98,11 @@ public class Trainee {
         this.fitnessLevel = fitnessLevel;
     }
 
+    public Trainer getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+    }
 }
