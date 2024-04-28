@@ -20,7 +20,8 @@ public class TraineeController {
         this.traineeService = traineeService;
     }
 
-    @Operation(description = "Este end-point permite la inscripción de usuarios!\n" +
+    @Operation(method = "Añadir aprendiz\nAdd trainee",
+            description = "Este end-point permite la inscripción de usuarios!\n" +
                         "\n" +
                         "This end-point allows users to sing in!",
                     responses = {
@@ -32,7 +33,8 @@ public class TraineeController {
                             "Invalid information"),
                     @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                             "\n"+
-                            "Unexpected system error")})
+                            "Unexpected system error")}
+                    )
     @PostMapping("/add")
     public TraineeDTO addTrainee(@RequestBody Trainee trainee){
         return this.traineeService.addTrainee(trainee);
