@@ -7,13 +7,13 @@ El proyecto Zeus es un microservicio desarrollado con Java 17 y Spring Boot. Se 
 Aquí se presentan tres diagramas que explican el funcionamiento del microservicio:
 
 1. Diagrama Microservicio principal
-   ![Arquitectura]([/path/to/architecture_diagram.png](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/UML%20microservicio%20principal.png))
+   ![Arquitectura](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/UML%20microservicio%20principal.png)
 
 2. Diagrama Microservicio secundario
-   ![Clases]([/path/to/class_diagram.png](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/UML%20microservicio%20secundario.png))
+   ![Clases](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/UML%20microservicio%20secundario.png)
 
 3. Diagrama entidad relación
-   ![Flujo]([/path/to/flow_diagram.png](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/Diagrama%20entidad%20relación.jpeg))
+   ![Flujo](https://github.com/zapatac2312/Proyecto-Zeus/blob/master/Diagrama%20entidad%20relación.jpeg)
 
 ## Dependencias Utilizadas
 - Spring Data JPA: Para la persistencia de datos.
