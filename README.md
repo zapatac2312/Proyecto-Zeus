@@ -1,6 +1,6 @@
 # 🏛️ Proyecto Zeus 🏛️
 
-## Descripción
+## De qué se trata?
 El proyecto Zeus es un microservicio desarrollado con Java 17 y Spring Boot. Se trata de una aplicación de gestión de gimnasio que permite gestionar los datos de los entrenadores y aprendices.
 
 ### Diagramas de Funcionamiento
