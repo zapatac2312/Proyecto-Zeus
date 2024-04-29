@@ -14,6 +14,10 @@ import java.util.Optional;
 public interface TraineeRepository extends JpaRepository<Trainee, Long> {
     Trainee findByEmail(String email);
     Boolean existsByEmail(String email);
+    Boolean existsByName(String name);
+
+
+
 }
 
 

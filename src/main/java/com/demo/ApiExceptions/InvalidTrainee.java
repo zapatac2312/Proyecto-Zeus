@@ -15,9 +15,7 @@ public class InvalidTrainee extends RuntimeException {
         this.code = code;
     }
 
-    public InvalidTrainee(String message, Throwable cause) {
-        super(message, cause);
-    }
+
 
 
 }

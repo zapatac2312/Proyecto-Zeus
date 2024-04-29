@@ -52,8 +52,8 @@ public class TrainerController {
     }
 
     @GetMapping("/availability")
-    public List<TrainerDTO> checkTrainerAvailability() {
-        return trainerService.checkTrainerAvailability();
+    public ResponseDTO<List<TrainerDTO>> checkTrainerAvailability() {
+        return new ResponseDTO(trainerService.checkTrainerAvailability());
     }
 
 
@@ -65,6 +65,5 @@ public class TrainerController {
         } catch (InvalidTrainer e) {
             return new ResponseDTO(e.getMessage());
         }
-
     }
 }

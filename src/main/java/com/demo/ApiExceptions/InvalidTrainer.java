@@ -17,8 +17,6 @@ public class InvalidTrainer extends RuntimeException{
         this.code = code;
     }
 
-    public InvalidTrainer(String message, Throwable cause) {
-        super(message, cause);
-    }
+
 }
 

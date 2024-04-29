@@ -22,14 +22,13 @@ public class TraineeController {
     }
 
     @PostMapping("/add")
-    public ResponseDTO<TraineeDTO>addTrainee(@RequestBody Trainee trainee){
+    public ResponseDTO<TraineeDTO> addTrainee(@RequestBody Trainee trainee) {
 
         try {
             return new ResponseDTO(this.traineeService.addTrainee(trainee));
         } catch (InvalidTrainee e) {
             return new ResponseDTO(e.getMessage());
         }
-
     }
 
     @GetMapping("/info")
@@ -39,8 +38,6 @@ public class TraineeController {
         } catch (InvalidTrainee e) {
             return new ResponseDTO(e.getMessage());
         }
-
-
     }
 
     @PutMapping("/password")
@@ -60,23 +57,21 @@ public class TraineeController {
         } catch (InvalidTrainee e) {
             return new ResponseDTO(e.getMessage());
         }
-
     }
 
     @PutMapping("/trainer")
-    public ResponseDTO<TraineeDTO> assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail){
-       try {
-           return new ResponseDTO(this.traineeService.assingToTrainer(name, traineeEmail));
+    public ResponseDTO<TraineeDTO> assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail) {
+        try {
+            return new ResponseDTO(this.traineeService.assingToTrainer(name, traineeEmail));
 
-       } catch (InvalidTrainee e) {
-           return new ResponseDTO(e.getMessage());
-       }
-
+        } catch (InvalidTrainee e) {
+            return new ResponseDTO(e.getMessage());
+        }
     }
+
 
     @PostMapping("/report")
     private Boolean generateReport(@RequestParam String email, @RequestParam String trainingCategory, @RequestParam Integer duration){
         return this.traineeService.generateReport(email, trainingCategory, duration);
     }
-
 }
