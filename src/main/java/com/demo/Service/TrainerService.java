@@ -56,6 +56,7 @@ public class TrainerService {
             trainer.setSpeciality(updatedTrainerInfo.getSpeciality());
             trainer.setExperience(updatedTrainerInfo.getExperience());
             trainer.setCertifications(updatedTrainerInfo.getCertifications());
+            trainer.setTrainee(updatedTrainerInfo.getTrainee());
             this.trainerRepository.save(trainer);
             return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
         }else {

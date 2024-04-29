@@ -30,8 +30,8 @@ public class Trainee {
     private String fitnessLevel;
 
     @Setter
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trainer_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "trainer_id", unique = false)
     private Trainer trainer;
 
     public Long getID() {
