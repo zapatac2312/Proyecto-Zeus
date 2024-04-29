@@ -29,6 +29,9 @@ Aquí se presentan tres diagramas que explican el funcionamiento del microservic
 ## Conexión con el Segundo Microservicio
 El segundo microservicio, también desarrollado con Java 17 y Spring Boot, se encarga únicamente de guardar los reportes de entrenamiento de los usuarios en una base de datos no relacional con MongoDB. La conexión con este segundo microservicio se realiza a través de WebFlux.
 
+Aqui peudes encontrar el enlace del repositorio de ese microservicio!
+https://github.com/zapatac2312/Proyecto-Zeus-Aux-microservice
+
 ## Ejemplos de Solicitudes
 
 ### Añadir un Aprendiz
