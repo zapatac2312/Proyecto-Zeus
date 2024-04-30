@@ -1,5 +1,7 @@
 package com.demo.Controlador;
 
+import com.demo.ApiExceptions.BusinessException;
+import com.demo.ApiExceptions.InvalidTrainee;
 import com.demo.DTO.RequestTraineeDTO;
 import com.demo.DTO.TraineeDTO;
 import com.demo.Modelo.Trainee;
@@ -37,7 +39,11 @@ public class TraineeController {
                     )
     @PostMapping("/add")
     public TraineeDTO addTrainee(@RequestBody Trainee trainee){
-        return this.traineeService.addTrainee(trainee);
+        try{
+            return this.traineeService.addTrainee(trainee);
+        } catch (BusinessException e) {
+        return new TraineeDTO();
+         }
     }
   @Operation(description = "Este end-point muestra la información basica del usuario\n"+
           "\n" +
@@ -52,10 +58,14 @@ public class TraineeController {
                   @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                           "\n"+
                           "Unexpected system error")})
-    @GetMapping("/info")
-    public TraineeDTO showTraineeInfo(@RequestParam String email) {
-        return traineeService.showTraineeInfo(email);
-    }
+  @GetMapping("/info")
+  public TraineeDTO showTraineeInfo(@RequestParam String email) {
+      try {
+          return this.traineeService.showTraineeInfo(email);
+      } catch (BusinessException e) {
+          return new TraineeDTO();
+      }
+  }
  @Operation(description = "Este end-point permite el cambio de contraseña\n"+
          "\n" +
          "This end-point allows to change the password",
@@ -68,10 +78,14 @@ public class TraineeController {
                          "Invalid information"),
                  @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+"\n"+
                          "Unexpected system error")})
-    @PutMapping("/change-password")
-    public boolean changeTraineePassword(@RequestBody RequestTraineeDTO requestTraineeDTO) {
-        return traineeService.changeTraineePassword(requestTraineeDTO);
-    }
+ @PutMapping("/password")
+ public boolean changeTraineePassword(@RequestBody RequestTraineeDTO requestTraineeDTO) {
+      try {
+          return traineeService.changeTraineePassword(requestTraineeDTO);
+      } catch (BusinessException e){
+          return false;
+      }
+ }
   @Operation(description = "Este end-point permite actualizar los datos del usuario\n"+
           "\n" +
           "This end-point updates the users information",
@@ -85,10 +99,14 @@ public class TraineeController {
                   @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                           "\n"+
                           "Unexpected system error")})
-    @PutMapping("/update-info")
-    public TraineeDTO updateTraineeInfo(@RequestParam String email, @RequestBody Trainee trainee) {
-        return traineeService.updateTraineeInfo(email, trainee);
-    }
+  @PutMapping("/info")
+  public TraineeDTO updateTraineeInfo(@RequestParam String email, @RequestBody Trainee trainee) {
+     try {
+         return traineeService.updateTraineeInfo(email, trainee);
+     }catch (BusinessException e){
+         return new TraineeDTO();
+     }
+  }
  @Operation(description ="Este end-point asigna un entrenador a el usuario\n"+
          "\n" +
          "This end-point sets a trainer for the trainee",
@@ -102,10 +120,14 @@ public class TraineeController {
                  @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                          "\n"+
                          "Unexpected system error")})
-    @PutMapping("/assing-trainer")
-        public Boolean assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail){
-        return this.traineeService.assingToTrainer(name, traineeEmail);
-    }
+ @PutMapping("/trainer")
+ public Boolean assingToTrainer(@RequestParam String name, @RequestParam String traineeEmail) {
+     try {
+         return this.traineeService.assingToTrainer(name, traineeEmail);
+     } catch (InvalidTrainee e) {
+         return false;
+     }
+ }
  @Operation(description ="Este end-point genera un reporte del entrenamiento del día\n"+
          "\n" +
          "This end-point generates a report for today's training",
@@ -119,10 +141,10 @@ public class TraineeController {
                  @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                          "\n"+
                          "Unexpected system error")})
-    @PostMapping("/generate-report")
-    public Boolean generateReport(@RequestParam String email, @RequestParam String trainingCategory, @RequestParam Integer duration){
-        return this.traineeService.generateReport(email, trainingCategory, duration);
-    }
+ @PostMapping("/report")
+ public Boolean generateReport(@RequestParam String email, @RequestParam String trainingCategory, @RequestParam Integer duration){
+     return this.traineeService.generateReport(email, trainingCategory, duration);
+ }
  @Operation(description ="Este end-point genera un resumen de los entrenamientos del mes\n"+
          "\n" +
          "This end-point generates a summary for the monthly trainings",
@@ -136,7 +158,7 @@ public class TraineeController {
                  @ApiResponse(responseCode = "500", description = "Error inesperado en el sistema\n"+
                          "\n"+
                          "Unexpected system error")})
-    @GetMapping("/get-report")
+    @GetMapping("/report")
     public String getReport(@RequestParam String traineeEmail, @RequestParam Integer month, @RequestParam Integer year ){
         return this.traineeService.getMonthlyReport(traineeEmail, month, year);
     }

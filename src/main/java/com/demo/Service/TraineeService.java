@@ -1,5 +1,8 @@
 package com.demo.Service;
 
+import com.demo.ApiExceptions.BusinessException;
+import com.demo.ApiExceptions.InvalidTrainee;
+import com.demo.ApiExceptions.InvalidTrainer;
 import com.demo.DTO.*;
 import com.demo.Modelo.ActivityReports;
 import com.demo.Modelo.Trainee;
@@ -36,15 +39,15 @@ public class TraineeService {
     }
     public TraineeDTO addTrainee(Trainee trainee){
         if(trainee.getName()==null){
-            throw new RuntimeException("A name is required");
+            throw new InvalidTrainee("P-400","A name is required");
         } else if(trainee.getEmail()==null){
-            throw new RuntimeException("Invalid email");
+            throw new InvalidTrainee("P-400","Invalid email");
         } else if(trainee.getPassword()==null){
-            throw new RuntimeException("Invalid password");
+            throw new InvalidTrainee("P-400","Invalid password");
         }
         TraineeDTO traineeDTO = TraineeMapper.mapper.traineeToTraineeDTO(trainee);
         if(traineeRepository.existsByEmail(trainee.getEmail())){
-            throw new RuntimeException("Trainees email: "+ trainee.getEmail()+" already registered");
+            throw new BusinessException("P-500","Trainees email: "+ trainee.getEmail()+" already registered",HttpStatus.INTERNAL_SERVER_ERROR );
         }
         this.traineeRepository.save(trainee);
         return traineeDTO;
@@ -53,11 +56,11 @@ public class TraineeService {
         if(traineeRepository.existsByEmail(email)){
             Trainee existingTrainee = traineeRepository.findByEmail(email);
             if(updatedTraineeInfo.getName()==null){
-                throw new RuntimeException("A name is required");
+                throw new InvalidTrainee("P-400","A name is required");
             } else if(updatedTraineeInfo.getEmail()==null){
-                throw new RuntimeException("Invalid email");
+                throw new InvalidTrainee("P-400","Invalid email");
             } else if(updatedTraineeInfo.getPassword()==null){
-                throw new RuntimeException("Invalid password");
+                throw new InvalidTrainee("P-400","Invalid password");
             }
             existingTrainee.setName(updatedTraineeInfo.getName());
             existingTrainee.setEmail(updatedTraineeInfo.getEmail());
@@ -69,7 +72,7 @@ public class TraineeService {
             this.traineeRepository.save(existingTrainee);
             return TraineeMapper.mapper.traineeToTraineeDTO(updatedTraineeInfo);
         }else {
-            throw new RuntimeException("The trainees information you want to update doesn't exist in our system");
+            throw new BusinessException("P-500","The trainees information you want to update doesn't exist in our system",HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
     public TraineeDTO showTraineeInfo(String email){
@@ -77,7 +80,7 @@ public class TraineeService {
             Trainee existingTrainee = traineeRepository.findByEmail(email);
             return TraineeMapper.mapper.traineeToTraineeDTO(existingTrainee);
         }else {
-            throw new RuntimeException("Trainee's email not found");
+            throw new InvalidTrainer("P-500","Trainee's email not found");
         }
     }
     public Boolean assingToTrainer(String trainerName, String traineeEmail){
@@ -91,10 +94,10 @@ public class TraineeService {
                 updateTraineeInfo(traineeEmail, trainee);
                 return true;
             }else {
-                throw new RuntimeException("Trainee already has trainer assigned");
+                throw new InvalidTrainer("P-500","Trainee already has trainer assigned");
             }
         } else {
-            throw new RuntimeException("Trainee's email or Trainer's name not found");
+            throw new InvalidTrainer("P-500","Trainee's email not found");
         }
     }
 
@@ -102,12 +105,12 @@ public class TraineeService {
         if(traineeRepository.existsByEmail(requestTraineeDTO.getEmail())){
             Trainee trainee = this.traineeRepository.findByEmail(requestTraineeDTO.getEmail());
             if(requestTraineeDTO.getPassword()==null|| requestTraineeDTO.getPassword().equals(requestTraineeDTO.getOldPassword())){
-                throw new RuntimeException("New password is empty or same as the old password");
+                throw new InvalidTrainee("P-400","New password is empty or same as the old password");
             }
             trainee.setPassword(requestTraineeDTO.getPassword());
             return true;
         }else {
-            throw new RuntimeException("Trainee's email not found");
+            throw new BusinessException("P-500","Trainee's email not found",HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
 
@@ -125,7 +128,7 @@ public class TraineeService {
                     .bodyToMono(Boolean.class);
             return Boolean.TRUE.equals(respuestaMono.block());
         }else {
-            throw new RuntimeException("Trainee's email not found");
+            throw new BusinessException("P-500","Trainee's email not found", HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
     public String getMonthlyReport(String email, Integer month, Integer year){
@@ -136,7 +139,7 @@ public class TraineeService {
                     .bodyToMono(String.class)
                     .block();
         }else {
-            throw new RuntimeException("Trainee's email not found");
+            throw new BusinessException("P-500","Trainee's email not found", HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
 }

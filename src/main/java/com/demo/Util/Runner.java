@@ -22,7 +22,6 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
         if (this.rolesRepository.count() == 0) {
             this.rolesRepository.saveAll(List.of(
                     new Authority(AuthorityName.ADMIN),
@@ -30,17 +29,14 @@ public class Runner implements CommandLineRunner {
                     new Authority(AuthorityName.WRITE)
             ));
         }
-
         if (this.userRepository.count() == 0){
             var encoders = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
             this.userRepository.saveAll(List.of(
                             new User("admin",encoders.encode("password123"),List.of(this.rolesRepository.findByName(AuthorityName.ADMIN).get())),
                             new User("user1",encoders.encode("password123"),List.of(this.rolesRepository.findByName(AuthorityName.READ).get())),
                             new User("user2",encoders.encode("password456"),List.of(this.rolesRepository.findByName(AuthorityName.WRITE).get()))
                     )
             );
-
         }
     }
 }

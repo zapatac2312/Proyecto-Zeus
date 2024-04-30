@@ -1,10 +1,13 @@
 package com.demo.Service;
 
+import com.demo.ApiExceptions.BusinessException;
+import com.demo.ApiExceptions.InvalidTrainer;
 import com.demo.DTO.*;
 import com.demo.Modelo.Trainee;
 import com.demo.Modelo.Trainer;
 import com.demo.Repository.TrainerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -25,28 +28,28 @@ public class TrainerService {
         TrainerDTO trainerDTO = TrainerMapper.mapper.trainerToTrainerDTO(trainer);
         trainerDTO.setTrainee(trainer.getTrainee());
         if(trainer.getName()==null){
-            throw new RuntimeException("A name is required");
+            throw new InvalidTrainer("P-400", "A name is required");
         } else if(trainer.getEmail()==null){
-            throw new RuntimeException("Invalid email");
+            throw new InvalidTrainer("P-400","Invalid email");
         } else if(trainer.getPassword()==null){
-            throw new RuntimeException("Invalid password");
+            throw new InvalidTrainer("P-400","Invalid password");
         }
         if(trainerRepository.existsByEmail(trainer.getEmail())){
             this.trainerRepository.save(trainer);
             return trainerDTO;
         }else {
-            throw new RuntimeException("Trainer's email: "+ trainer.getEmail()+" already registered");
+            throw new BusinessException("P-500","Trainer's email: "+ trainer.getEmail()+" already registered", HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
     public TrainerDTO updateTrainerInfo(String email,Trainer updatedTrainerInfo) {
         if(trainerRepository.existsByEmail(email)){
             Trainer trainer = trainerRepository.findByEmail(email);
             if(updatedTrainerInfo.getName()==null){
-                throw new RuntimeException("A name is required");
+                throw new InvalidTrainer("P-400","A name is required");
             } else if(updatedTrainerInfo.getEmail()==null){
-                throw new RuntimeException("Invalid email");
+                throw new InvalidTrainer("P-400","Invalid email");
             } else if(updatedTrainerInfo.getPassword()==null){
-                throw new RuntimeException("Invalid password");
+                throw new InvalidTrainer("P-400","Invalid password");
             }
             trainer.setName(updatedTrainerInfo.getName());
             trainer.setEmail(updatedTrainerInfo.getEmail());
@@ -57,7 +60,7 @@ public class TrainerService {
             this.trainerRepository.save(trainer);
             return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
         }else {
-            throw new RuntimeException("The trainer's information you want to update doesn't exist in our system");
+            throw new BusinessException("P-500","The trainer's information you want to update doesn't exist in our system",HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
     public TrainerDTO showTrainerInfo(String email){
@@ -65,7 +68,7 @@ public class TrainerService {
             Trainer trainer = trainerRepository.findByEmail(email);
             return TrainerMapper.mapper.trainerToTrainerDTO(trainer);
         }else {
-            throw new RuntimeException("Trainer's email not found");
+            throw new BusinessException("P-500","Trainer's email not found",HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
 
@@ -81,12 +84,12 @@ public class TrainerService {
         if(trainerRepository.existsByEmail((requestTrainerDTO.getEmail()))){
             Trainer trainer = this.trainerRepository.findByEmail(requestTrainerDTO.getEmail());
             if(requestTrainerDTO.getPassword()==null|| requestTrainerDTO.getPassword().equals(requestTrainerDTO.getOldPassword())){
-                throw new RuntimeException("New password is empty or same as the old password");
+                throw new InvalidTrainer("P-400","New password is empty or same as the old password");
             }
             trainer.setPassword(requestTrainerDTO.getPassword());
             return true;
         }else {
-            throw new RuntimeException("Trainer's email not found");
+            throw new BusinessException("P-500","Trainer's email not found", HttpStatus.INTERNAL_SERVER_ERROR );
         }
     }
 }
