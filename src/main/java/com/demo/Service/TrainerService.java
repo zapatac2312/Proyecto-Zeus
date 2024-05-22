@@ -26,7 +26,6 @@ public class TrainerService {
 
     public TrainerDTO addTrainer(Trainer trainer){
         TrainerDTO trainerDTO = TrainerMapper.mapper.trainerToTrainerDTO(trainer);
-        trainerDTO.setTrainee(trainer.getTrainee());
         if(trainer.getName()==null){
             throw new InvalidTrainer("P-400", "A name is required");
         } else if(trainer.getEmail()==null){
@@ -34,7 +33,7 @@ public class TrainerService {
         } else if(trainer.getPassword()==null){
             throw new InvalidTrainer("P-400","Invalid password");
         }
-        if(trainerRepository.existsByEmail(trainer.getEmail())){
+        if(!trainerRepository.existsByEmail(trainer.getEmail())){
             this.trainerRepository.save(trainer);
             return trainerDTO;
         }else {

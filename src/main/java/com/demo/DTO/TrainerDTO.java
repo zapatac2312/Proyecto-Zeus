@@ -19,7 +19,6 @@ public class TrainerDTO {
     private String speciality;
     private String experience;
     private String certifications;
-    private List<Trainee> trainee;
 
     public String getName() {
         return name;
@@ -59,14 +58,6 @@ public class TrainerDTO {
 
     public void setCertifications(String certifications) {
         this.certifications = certifications;
-    }
-
-    public List<Trainee> getTrainee() {
-        return trainee;
-    }
-
-    public void setTrainee(List<Trainee> trainee) {
-        this.trainee = trainee;
     }
 
     @Override
